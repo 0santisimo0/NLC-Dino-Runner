@@ -1,6 +1,7 @@
 import pygame
 
 from nlc_dino_runner.componentes.dinosaur import Dinosaur
+from nlc_dino_runner.componentes.powerups.power_up_manager import PowerUpManager
 from nlc_dino_runner.utils import text_utils
 from nlc_dino_runner.componentes.obstacles.obstaclesManager import ObstaclesManager
 from nlc_dino_runner.utils.constants import TITLE, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, BG, FPS
@@ -19,13 +20,17 @@ class Game:
         self.game_speed = 20
         self.player = Dinosaur()
         self.obstacles_manager = ObstaclesManager()
+        self.power_up_manager = PowerUpManager()
         self.points = 0
         self.running = True
         self.death_count = 0
 
     def run(self):
         self.obstacles_manager.reset_obstacles()
+        self.power_up_manager.reset_power_ups(self.points)
         self.playing = True
+        self.points = 0
+        self.game_speed = 20
         while self.playing:
             self.event()
             self.update()
@@ -35,11 +40,13 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.playing = False
+                exit()
 
     def update(self):
         user_input = pygame.key.get_pressed()
         self.player.update(user_input)
         self.obstacles_manager.update(self)
+        self.power_up_manager.update(self.points, self.game_speed, self.player )
 
     def draw(self):
         self.clock.tick(FPS)
@@ -48,6 +55,7 @@ class Game:
         self.draw_background()
         self.player.draw(self.screen)
         self.obstacles_manager.draw(self.screen)
+        self.power_up_manager.draw(self.screen)
         pygame.display.update()
         pygame.display.flip()
 
@@ -57,6 +65,9 @@ class Game:
             self.game_speed += 1
         score_element, score_element_rect = text_utils.get_score_element(self.points)
         self.screen.blit(score_element, score_element_rect)
+
+    def check_invincibility(self):
+        pass
 
     def draw_background(self):
         image_width = BG.get_width()
@@ -101,13 +112,19 @@ class Game:
 
     def print_menu_elements(self):
         half_screen_height = SCREEN_HEIGHT // 2
+        if self.death_count == 0:
+            text, text_rect = text_utils.get_centered_message("Press Any Key to Start")
+        else:
+            text, text_rect = text_utils.get_centered_message("Press any Key to Restart")
 
-        text, text_rect = text_utils.get_centered_message("Press Any Key to Start")
         self.screen.blit(text, text_rect)
 
-        death_score, death_score_rect = text_utils.get_centered_message("Death count: " + str(self.death_count), height=half_screen_height + 50)
+        death_score, death_score_rect = text_utils.get_centered_message("Death count: " + str(self.death_count),
+                                                                        height=half_screen_height + 50)
+        points_score, points_score_rect = text_utils.get_centered_message("Score: " + str(self.points),
+                                                                          height=half_screen_height + 100)
         self.screen.blit(death_score, death_score_rect)
         self.screen.blit(ICON, ((SCREEN_WIDTH // 2) - 40, (SCREEN_HEIGHT // 2) - 150))
-
+        self.screen.blit(points_score, points_score_rect)
 # 'Clase 2: Ventana, background'
 # Clase 4: Colisiones
