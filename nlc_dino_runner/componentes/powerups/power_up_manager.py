@@ -3,6 +3,7 @@ import random
 import pygame
 from nlc_dino_runner.componentes.powerups.shield import Shield
 
+
 class PowerUpManager:
     def __init__(self):
         self.power_ups = []
@@ -29,7 +30,6 @@ class PowerUpManager:
         for power_up in self.power_ups:
             power_up.update(game_speed, self.power_ups)
             if player.dino_rect.colliderect(power_up.rect):
-                power_up.start_time = pygame.time.get_ticks ()
                 player.shield = True
                 player.show_text = True
                 player.type = power_up.type

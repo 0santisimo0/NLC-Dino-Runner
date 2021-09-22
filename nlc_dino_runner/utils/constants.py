@@ -7,6 +7,7 @@ SCREEN_HEIGHT = 600
 SCREEN_WIDTH = 1100
 FPS = 30
 IMG_DIR = os.path.join(os.path.dirname(__file__), "..", "assets")
+DEFAULT_NUMBER_OF_LIVES = 5
 
 # Assets Constants
 ICON = pygame.image.load(os.path.join(IMG_DIR, 'DinoWallpaper.png'))
