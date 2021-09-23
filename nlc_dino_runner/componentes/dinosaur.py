@@ -8,7 +8,11 @@ from nlc_dino_runner.utils.constants import (
     RUNNING_SHIELD,
     JUMPING_SHIELD,
     DUCKING_SHIELD,
-    DEFAULT_TYPE)
+    DEFAULT_TYPE,
+    HAMMER_TYPE,
+    RUNNING_HAMMER,
+    JUMPING_HAMMER,
+    DUCKING_HAMMER)
 from nlc_dino_runner.utils.text_utils import get_centered_message
 
 
@@ -20,18 +24,24 @@ class Dinosaur(Sprite):
 
     def __init__(self):
         self.run_img = {DEFAULT_TYPE: RUNNING,
-                        SHIELD_TYPE: RUNNING_SHIELD}
+                        SHIELD_TYPE: RUNNING_SHIELD,
+                        HAMMER_TYPE: RUNNING_HAMMER
+                        }
 
         self.jump_img = {DEFAULT_TYPE: JUMPING,
-                         SHIELD_TYPE: JUMPING_SHIELD}
+                         SHIELD_TYPE: JUMPING_SHIELD,
+                         HAMMER_TYPE: JUMPING_HAMMER}
 
         self.duck_img = {DEFAULT_TYPE: DUCKING,
-                         SHIELD_TYPE: DUCKING_SHIELD}
+                         SHIELD_TYPE: DUCKING_SHIELD,
+                         HAMMER_TYPE: DUCKING_HAMMER}
 
         self.type = DEFAULT_TYPE
         self.image = self.run_img[self.type][0]
         self.shield = False
         self.shield_time_up = 0
+        self.hammer = False
+        self.hammer_time_up = 0
         self.show_text = False
         self.dino_rect = self.image.get_rect()
         self.dino_rect.x = self.X_POS
@@ -105,6 +115,21 @@ class Dinosaur(Sprite):
                         width=500,
                         height=40,
                         size=10
+                    )
+                    screen.blit(text, text_rect)
+        elif self.hammer:
+            time_to_show = round((self.hammer_time_up - pygame.time.get_ticks()) / 1000, 1)
+            if time_to_show < 0:
+                self.hammer = False
+                if self.type == HAMMER_TYPE:
+                    self.type = DEFAULT_TYPE
+            else:
+                if self.show_text:
+                    text, text_rect = get_centered_message(
+                        f'Hammer enable for {time_to_show}',
+                        width=500,
+                        height=40,
+                        size=20
                     )
                     screen.blit(text, text_rect)
 

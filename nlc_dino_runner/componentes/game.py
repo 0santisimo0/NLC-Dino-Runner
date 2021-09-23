@@ -30,9 +30,9 @@ class Game:
     def run(self):
         self.lives_manager.restart_lives()
         self.obstacles_manager.reset_obstacles()
+        self.points = 0
         self.power_up_manager.reset_power_ups(self.points)
         self.playing = True
-        self.points = 0
         self.game_speed = 20
         while self.playing:
             self.event()
@@ -49,7 +49,7 @@ class Game:
         user_input = pygame.key.get_pressed()
         self.player.update(user_input)
         self.obstacles_manager.update(self)
-        self.power_up_manager.update(self.points, self.game_speed, self.player)
+        self.power_up_manager.update(self.points, self.game_speed, self.player, user_input)
 
     def draw(self):
         self.clock.tick(FPS)
