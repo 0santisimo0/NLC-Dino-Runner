@@ -1,11 +1,12 @@
 import pygame
+import random
 
 from nlc_dino_runner.componentes.dinosaur import Dinosaur
 from nlc_dino_runner.componentes.lives.lives_manager import LivesManager
 from nlc_dino_runner.componentes.powerups.power_up_manager import PowerUpManager
 from nlc_dino_runner.utils import text_utils
 from nlc_dino_runner.componentes.obstacles.obstaclesManager import ObstaclesManager
-from nlc_dino_runner.utils.constants import TITLE, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, BG, FPS
+from nlc_dino_runner.utils.constants import TITLE, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, BG, FPS, CLOUD
 
 
 class Game:
@@ -18,6 +19,7 @@ class Game:
         self.playing = False
         self.x_pos_bg = 0
         self.y_pos_bg = 380
+        self.y_pos_cloud = random.randint(40, 150)
         self.game_speed = 20
         self.player = Dinosaur()
         self.obstacles_manager = ObstaclesManager()
@@ -31,7 +33,7 @@ class Game:
         self.lives_manager.restart_lives()
         self.obstacles_manager.reset_obstacles()
         self.points = 0
-        self.power_up_manager.reset_power_ups(self.points)
+        self.power_up_manager.reset_power_ups(self.points, self.player)
         self.playing = True
         self.game_speed = 20
         while self.playing:
@@ -76,12 +78,17 @@ class Game:
         image_width = BG.get_width()
         self.screen.blit(BG, (self.x_pos_bg, self.y_pos_bg))
 
+        clouds_width = CLOUD.get_width()
+        self.screen.blit(CLOUD, (self.x_pos_bg, self.y_pos_cloud))
+
         # la imagen se mueve
         self.screen.blit(BG, (self.x_pos_bg + image_width, self.y_pos_bg))
+        self.screen.blit(CLOUD, (self.x_pos_bg + image_width, self.y_pos_cloud))
 
         # Reset
         if self.x_pos_bg <= -image_width:
             self.screen.blit(BG, (self.x_pos_bg + image_width, self.y_pos_bg))
+            self.screen.blit(CLOUD, (self.x_pos_bg + image_width, self.y_pos_cloud))
             self.x_pos_bg = 0
 
         self.x_pos_bg -= self.game_speed

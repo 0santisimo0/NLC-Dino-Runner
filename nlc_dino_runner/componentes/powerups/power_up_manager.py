@@ -14,11 +14,12 @@ class PowerUpManager:
         self.hammer = Hammer()
         self.hammer_on_screen = False
 
-    def reset_power_ups(self, points):
+    def reset_power_ups(self, points, player):
         self.power_ups = []
         self.points = points
         self.when_appears = random.randint(200, 300) + self.points
         self.hammer_on_screen = False
+        player.hammer_time_up = 0
 
     def generate_power_ups(self, points):
         self.points = points
